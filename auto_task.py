@@ -37,6 +37,7 @@ class BilibiliTask:
     def check_login_status(self):
         """检查登录状态"""
         try:
+            time.sleep(random.uniform(1, 3))
             res = requests.get('https://api.bilibili.com/x/web-interface/nav', headers=self.headers)
             if res.json()['code'] == -101:
                 return False, '账号未登录'
@@ -47,6 +48,7 @@ class BilibiliTask:
     def share_video(self):
         """分享视频"""
         try:
+            time.sleep(random.uniform(1, 3))
             # 获取随机视频
             res = requests.get('https://api.bilibili.com/x/web-interface/dynamic/region?ps=1&rid=1', headers=self.headers)
             bvid = res.json()['data']['archives'][0]['bvid']
@@ -54,9 +56,16 @@ class BilibiliTask:
             # 分享视频
             data = {
                 'bvid': bvid,
-                'csrf': self.get_csrf()
+                'csrf': self.get_csrf()，
+                'share_channel': 'weibo'
             }
-            res = requests.post('https://api.bilibili.com/x/web-interface/share/add', headers=self.headers, data=data)
+            # 使用移动端API接口
+            mobile_headers = self.headers.copy()
+            mobile_headers.update({
+                'User-Agent': 'Mozilla/5.0 (Linux; Android 14) Mobile BiliApp/8.33.0',
+                'Referer': 'https://m.bilibili.com/'
+            })
+            res = requests.post('https://api.bilibili.com/x/web-interface/share/add', headers=mobile_headers, data=data)
             if res.json()['code'] == 0:
                 return True, None
             else:
@@ -67,6 +76,7 @@ class BilibiliTask:
     def watch_video(self, bvid):
         """观看视频"""
         try:
+            time.sleep(random.uniform(1, 3))
             data = {
                 'bvid': bvid,
                 'csrf': self.get_csrf(),
@@ -84,6 +94,7 @@ class BilibiliTask:
     def live_sign(self):
         """直播签到"""
         try:
+            time.sleep(random.uniform(1, 3))
             res = requests.get('https://api.live.bilibili.com/xlive/web-ucenter/v1/sign/DoSign',
                              headers=self.headers)
             if res.json()['code'] == 0:
@@ -96,6 +107,7 @@ class BilibiliTask:
     def manga_sign(self):
         """漫画签到"""
         try:
+            time.sleep(random.uniform(1, 3))
             res = requests.post('https://manga.bilibili.com/twirp/activity.v1.Activity/ClockIn',
                               headers=self.headers,
                               data={'platform': 'ios'})
@@ -109,6 +121,7 @@ class BilibiliTask:
     def get_user_info(self):
         """获取用户信息"""
         try:
+            time.sleep(random.uniform(1, 3))
             res = requests.get('https://api.bilibili.com/x/web-interface/nav',
                              headers=self.headers)
             data = res.json()['data']
