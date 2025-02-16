@@ -56,7 +56,7 @@ class BilibiliTask:
             # 分享视频
             data = {
                 'bvid': bvid,
-                'csrf': self.get_csrf()，
+                'csrf': self.get_csrf(),
                 'share_channel': 'weibo'
             }
             # 使用移动端API接口
